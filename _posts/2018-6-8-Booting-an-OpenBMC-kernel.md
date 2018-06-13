@@ -15,6 +15,8 @@ Get a copy of the kernel and build it:
 ```
 git clone https://github.com/openbmc/linux -b dev-4.13 openbmc-dev
 cd openbmc-dev
+export ARCH=arm
+export CROSS_COMPILE=arm-linux-gnueabi-
 make aspeed_g5_defconfig
 make -j $(nproc)
 ```
