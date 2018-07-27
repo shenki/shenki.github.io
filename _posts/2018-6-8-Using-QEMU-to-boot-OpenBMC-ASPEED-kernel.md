@@ -9,7 +9,7 @@ and `sudo apt-get install qemu-system-arm` instead.
 
 To build:
 ```
-git clone https://github.com/legoater/qemu -b aspeed-2.12 qemu-aspeed
+git clone https://github.com/legoater/qemu -b aspeed-3.0 qemu-aspeed
 cd qemu-aspeed
 ./configure --target-list=arm-softmmu
 make -j $(nproc)
