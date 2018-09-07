@@ -68,3 +68,31 @@ neighbour.c:(.text+0x1f2c): relocation truncated to fit: R_PPC64_ADDR16_HA again
 ld: net/sched/sch_generic.o: in function `local_bh_enable':
 sch_generic.c:(.text+0x392c): additional relocation overflows omitted from the output
 ```
+
+Nick suggested this was due to the use of `_THIS_IP_`, which takes the address
+of a local label in order to create a pointer to the current program counter (I
+think). GCC generates a TOC entry for this, but clang is trying to fit it in 32.
+
+```
+0000000000002400 <local_bh_enable>:
+    2400:       00 00 4c 3c     addis   r2,r12,0
+    2404:       00 00 42 38     addi    r2,r2,0
+    2408:       a6 02 08 7c     mflr    r0
+    240c:       10 00 01 f8     std     r0,16(r1)
+    2410:       e1 ff 21 f8     stdu    r1,-32(r1)
+    2414:       00 00 60 38     li      r3,0
+    2418:       00 02 80 38     li      r4,512
+    241c:       00 00 63 3c     addis   r3,r3,0
+    2420:       01 00 00 48     bl      2420 <local_bh_enable+0x20>
+    2424:       00 00 00 60     nop
+    2428:       20 00 21 38     addi    r1,r1,32
+    242c:       10 00 01 e8     ld      r0,16(r1)
+    2430:       a6 03 08 7c     mtlr    r0
+    2434:       20 00 80 4e     blr
+        ...
+    2444:       00 00 00 60     nop
+    2448:       00 00 00 60     nop
+    244c:       00 00 42 60     ori     r2,r2,0
+```
+
+(disassembly of `kernel/softirq.o` built with clang)
