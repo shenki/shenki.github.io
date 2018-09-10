@@ -13,14 +13,14 @@ make powernv_defconfig
 ```
 
 1. Disable `PPC_DISABLE_WERROR` due to `-Wduplicate-decl-specifier` warnings in
-   `arch/powerpc/include/asm/uaccess.h` (see [https://github.com/linuxppc/linux/issues/185])
+   `arch/powerpc/include/asm/uaccess.h` (see <https://github.com/linuxppc/linux/issues/185>)
 
 2. Disable `FTRACE` due to this enabling the `-mno-sched-epilog` option which
    clang does not know about.
 
 3. Disable `MD_RAID456` and `BTRFS_FS` as `lib/raid6/altivec1.c` causes clang to crash
 
-4. Apply this patch ([https://patchwork.ozlabs.org/patch/966825/]):
+4. Apply this patch <https://patchwork.ozlabs.org/patch/966825/>:
 
 ```
 diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
@@ -71,7 +71,9 @@ sch_generic.c:(.text+0x392c): additional relocation overflows omitted from the o
 
 Nick suggested this was due to the use of `_THIS_IP_`, which takes the address
 of a local label in order to create a pointer to the current program counter (I
-think). GCC generates a TOC entry for this, but clang is trying to fit it in 32.
+think). GCC generates a TOC entry for this, but clang is trying to fit it in
+32.  A [bug was reported](https://bugs.llvm.org/show_bug.cgi?id=38864) and a
+[patch posted](https://reviews.llvm.org/D50965).
 
 ```
 0000000000002400 <local_bh_enable>:
