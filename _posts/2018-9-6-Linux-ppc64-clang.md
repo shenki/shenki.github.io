@@ -98,3 +98,40 @@ think). GCC generates a TOC entry for this, but clang is trying to fit it in
 ```
 
 (disassembly of `kernel/softirq.o` built with clang)
+
+When creating the boot wrapper, clang doesn't like the assembly syntax:
+```
+arch/powerpc/boot/crt0.S:168:22: error: unexpected modifier on variable reference
+    cmpdi   12,RELACOUNT@l
+                         ^
+arch/powerpc/boot/crt0.S:168:11: error: unknown operand
+    cmpdi   12,RELACOUNT@l
+              ^
+```
+
+When linking the final zImage.epar:
+```
+ld -m elf64lppc -T arch/powerpc/boot/zImage.lds -Ttext 0x20000000 -pie --no-dynamic-linker -o arch/powerpc/boot/zImage.epapr arch/powerpc/boot/pseries-head.o arch/powerpc/boot/epapr.o arch/powerpc/boot/epapr-wrapper.o ./zImage.99582.o arch/powerpc/boot/wrapper.a
+ld: arch/powerpc/boot/wrapper.a(crt0.o): in function '_zimage_start':
+(.text+0x58): multiple definition of '_zimage_start'; arch/powerpc/boot/pseries-head.o:(.text+0x0): first defined here
+```
+
+```
+$ objdump -t arch/powerpc/boot/pseries-head.o | grep _zimage_start
+0000000000000000 g       .text	0000000000000000 _zimage_start
+0000000000000000         *UND*	0000000000000000 _zimage_start_lib
+$ objdump -t arch/powerpc/boot/crt0.o |grep _zimage_start
+0000000000000000 g       .text	0000000000000000 _zimage_start_opd
+0000000000000058  w      .text	0000000000000000 _zimage_start
+0000000000000058 g       .text	0000000000000000 _zimage_start_lib
+```
+
+```
+$ objdump -t arch/powerpc/boot/pseries-head.o | grep _zimage_start
+0000000000000000 g       .text	0000000000000000 _zimage_start
+0000000000000000         *UND*	0000000000000000 _zimage_start_lib
+$ objdump -t arch/powerpc/boot/crt0.o |grep _zimage_start
+0000000000000058 g       .text	0000000000000000 _zimage_start
+0000000000000058 g       .text	0000000000000000 _zimage_start_lib
+0000000000000000 g       .text	0000000000000000 _zimage_start_opd
+```
