@@ -7,7 +7,7 @@ When writing commit messages for patch sets sent via email on the Linux Kernel
 Mailing List it is convention to include a changelog between the current and
 previous versions of the patch.
 
-When you run `git format-patch` it spits out a file like this. Convection is to
+When you run `git format-patch` it spits out a file like this. Convention is to
 put your changelog below the snip line, which is used by patch applying tool
 `git am` to indicate the end of the commit message:
 

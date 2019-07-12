@@ -23,3 +23,10 @@ fw_setenv bootargs console=ttyS4,115200n8 mem.devmem=1
 
 After rebooting the `/dev/mem` character device will be back. This will persist
 until the command line is changed back to the default.
+
+
+## References
+
+https://github.com/openbmc/skeleton/issues/20
+https://github.com/openbmc/openbmc/issues/762
+https://github.com/openbmc/openbmc/issues/3252
