@@ -96,8 +96,7 @@ openfirmware to call into).
 apt install gcc-powerpc64le-linux-gnu
 git clone -b microwatt-5.7 https://git.kernel.org/pub/scm/linux/kernel/git/joel/microwatt.git
 cd microwatt
-wget https://ozlabs.org/~paulus/rootfs.cpio.xz
-unxz rootfs.cpio.xz
+wget https://ozlabs.org/~joel/rootfs.cpio
 CROSS_COMPILE="ccache powerpc64le-linux-gnu-" ARCH=powerpc make -j8 O=microwatt microwatt_defconfig
 CROSS_COMPILE="ccache powerpc64le-linux-gnu-" ARCH=powerpc make -j8 O=microwatt
 ```
