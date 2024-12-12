@@ -12,8 +12,8 @@ as a GPG smartcard.
 
 I mostly followed the kernel.org maintainer documentation:
 
- * [https://docs.kernel.org/process/maintainer-pgp-guide.html]
- * [https://github.com/lfit/itpol/blob/master/protecting-code-integrity.md]
+ * <https://docs.kernel.org/process/maintainer-pgp-guide.html>
+ * <https://github.com/lfit/itpol/blob/master/protecting-code-integrity.md>
 
 ### Pins
 
